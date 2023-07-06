@@ -1,0 +1,25 @@
+1. Ask the user for their location to find the closest airport location.
+    a. API in "Airport API" - "Search airports by free text (if there is a space, it must be replaced with %20.)"
+    b. Return to the user the names of the possible airports.
+    c. Ask which airport they would like to use. 
+        i. Don't ask if there is only one aiport available.
+        ii. The api provides lat & lon of the airport. 
+
+
+2. We can use icao or iata (better) to locate airports all over the world. 
+
+3. Using the icao or iata, we can get the following informations:
+    a. destination and flight operators. (Airport routes and daily flight statistics)
+    b. current local time at airport (Current local time at the airport)
+    c. The distance and information about from and to airports. (distance/flight time between airports)
+    d. Current weather at the airport. (current weather at airport)
+
+    e. *** We can get the departure and arrival of all airports. We can loop through the arrivals to check the flight information going to that airport. (FIDS/Schdeles: Airport departures and arrivals)
+        i. Using this info, we can get the number (항공기 번호)to do the following below. 
+
+4. With the name of the flight, we can do the following.
+    a. Get flight status including departure, arrival, airline, etc. 
+    b. See in which dates the flight is operating. 
+    c. 
+
+
