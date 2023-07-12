@@ -1,0 +1,8 @@
+I am working on getting the names of the airports from the api data.
+
+The api returns a string that looks like a dictionary.
+    1. Maybe we can convert string into a dictionary
+    2. need to figure out a way to set the regular expression pattern to get the city names
+
+I also need to find a way to print city names that have white space without 20% printing.
+    i.e. "grand20%rapids"

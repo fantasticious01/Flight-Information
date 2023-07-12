@@ -1,0 +1,1 @@
+assert test1.user_location == "Chiang Mai"

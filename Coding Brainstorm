@@ -6,6 +6,11 @@
         ii. The api provides lat & lon of the airport. 
 
 
+
+
+
+
+
 2. We can use icao or iata (better) to locate airports all over the world. 
 
 3. Using the icao or iata, we can get the following informations:
