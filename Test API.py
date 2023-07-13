@@ -1,7 +1,7 @@
 
 
 import http.client
-import re
+
 
 conn = http.client.HTTPSConnection("aerodatabox.p.rapidapi.com")
 
@@ -15,12 +15,8 @@ conn.request("GET", "/airports/search/term?q=grand%20rapids&limit=10", headers=h
 res = conn.getresponse()
 data = res.read()
 
+print(data.decode("utf-8"))
 
-pattern = r'Grand Rapids'
-
-matches = re.findall(pattern, data.decode("utf-8"))
-
-print(matches)
 
 # name = "Daniel Park"
 # if " " in name:

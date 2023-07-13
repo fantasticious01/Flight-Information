@@ -1,8 +1,8 @@
-I am working on getting the names of the airports from the api data.
+Progress message:
+1. Need to find a way to say invalid input when selecting a city
+   if the city doesn't exist. 
 
-The api returns a string that looks like a dictionary.
-    1. Maybe we can convert string into a dictionary
-    2. need to figure out a way to set the regular expression pattern to get the city names
 
-I also need to find a way to print city names that have white space without 20% printing.
-    i.e. "grand20%rapids"
+
+Comments:
+1. When running the program, need to call these functions.
