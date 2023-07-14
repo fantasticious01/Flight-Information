@@ -6,3 +6,6 @@ Progress message:
 
 Comments:
 1. When running the program, need to call these functions.
+   a. user_location
+   b. find_airport
+   c. get_iata

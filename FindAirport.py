@@ -42,11 +42,13 @@ class FindAirport:
 
         print("Available airports in the city of " + self.airport_data['searchBy'] +" are: ")
 
+        # Loops through the dictionary to find available airports in the city. 
         for index, airport in enumerate(self.airport_data['items'], 1):
             print(str(index) + '. ' + airport['name'])
             self.available_airports.append(airport['name'])
 
         self.user_airport = self.choose_airport()
+        self.get_iata()
         
 
     def choose_airport(self):
@@ -58,7 +60,7 @@ class FindAirport:
                 choice = int(choice)
                 if 1 <= choice <= len(self.available_airports):
                     selected_option = self.available_airports[choice-1]
-                    print(f'You have selected: {selected_option}')
+                    print(f'\nYou have selected: {selected_option}')
                     break
                 else:
                     print("Invalid choice!")
@@ -68,11 +70,27 @@ class FindAirport:
         return selected_option
     
     def get_iata(self):
-        """Gets the iata of the airport, which will be used in different parts of the code."""
+        """Gets the iata of the user chosen airport."""
         for airport in self.airport_data['items']:
             if self.user_airport in airport['name']:
                 self.airport_iata = airport['iata']
                 return self.airport_iata
+            
+    def airport_time(self):
+        """The method provides the current local day and time at the airport."""
+
+        conn.request("GET", "/airports/iata/" + self.airport_iata + "/time/local", headers=headers)
+        res = conn.getresponse()
+        data = res.read()
+        api_result = data.decode("utf-8")
+        time_data = json.loads(api_result)
+        current_day_and_time = time_data['time']['local']
+        time_zone = time_data['timeZoneId']
+        print(f"\nThe local day and time at the airport is {current_day_and_time} in timezone {time_zone}.")
+        
+
+
+
 
 
  
@@ -90,5 +108,10 @@ if __name__ == '__main__':
     test1.get_iata()
     # When the airport has been chosen as John F Kennedy in New York City
     ##assert test1.airport_iata == "JFK"
+
+    # Testing airport_time() method to see if it prints out the expected information. 
+    test1.airport_time()
+
+
 
 
