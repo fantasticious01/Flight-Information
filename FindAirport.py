@@ -1,11 +1,12 @@
 import http.client
-
+import time
 import json
 
 conn = http.client.HTTPSConnection("aerodatabox.p.rapidapi.com")
 
 headers = {
-    'X-RapidAPI-Key': "93f5488671msh0f9bdb82e4a4714p1562d8jsn85879706bc13",
+    # User will need an api key
+    'X-RapidAPI-Key': "API-KEY",
     'X-RapidAPI-Host': "aerodatabox.p.rapidapi.com"
 }
 
@@ -40,27 +41,29 @@ class FindAirport:
 
         self.airport_data = json.loads(api_result)
 
-        print("Available airports in the city of " + self.airport_data['searchBy'] +" are: ")
-
+        print("\n\nAvailable airports in the city of " + self.airport_data['searchBy'] +" are: \n")
+        time.sleep(0.5)
         # Loops through the dictionary to find available airports in the city. 
         for index, airport in enumerate(self.airport_data['items'], 1):
             print(str(index) + '. ' + airport['name'])
             self.available_airports.append(airport['name'])
+            time.sleep(0.3)
 
         self.user_airport = self.choose_airport()
-        self.get_iata()
+        return self.user_airport
         
 
     def choose_airport(self):
         """From the available airports, makes the user to choose an airport"""
         while True:
-            choice = input("Enter the number of your choice: ")
+            choice = input("\nEnter the number of your choice: ")
 
             try:
                 choice = int(choice)
                 if 1 <= choice <= len(self.available_airports):
                     selected_option = self.available_airports[choice-1]
                     print(f'\nYou have selected: {selected_option}')
+                    time.sleep(0.5)
                     break
                 else:
                     print("Invalid choice!")
@@ -86,7 +89,9 @@ class FindAirport:
         time_data = json.loads(api_result)
         current_day_and_time = time_data['time']['local']
         time_zone = time_data['timeZoneId']
-        print(f"\nThe local day and time at the airport is {current_day_and_time} in timezone {time_zone}.")
+        print(f"\nThe local day and time at the airport is {current_day_and_time} in timezone {time_zone}.\n\n")
+        time.sleep(1)
+        
         
 
 

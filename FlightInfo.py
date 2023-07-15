@@ -1,28 +1,33 @@
 import http.client
-
+from datetime import datetime, timedelta
 import json
+import time
 
 conn = http.client.HTTPSConnection("aerodatabox.p.rapidapi.com")
 
 headers = {
-    'X-RapidAPI-Key': "93f5488671msh0f9bdb82e4a4714p1562d8jsn85879706bc13",
+    'X-RapidAPI-Key': "API-Key",
     'X-RapidAPI-Host': "aerodatabox.p.rapidapi.com"
 }
 
 class FlightInfo:
-    def __init__(self):
+    def __init__(self, iata, local_airport):
         """Create a new class that provides flight information to the user"""
         self.possible_destination = []
         self.chosen_destination = ""
         self.destination_options = {}
         self.destination_iata = ""
+        self.current_date = ""
+        self.tolocal_dtime = ""
+        self.fromlocal_dtime = ""
+        self.aircraft_number = ""
+        self.local_airport_iata = iata
+        self.local_airport = local_airport
 
     def find_destination(self):
         """Allows the user to find a destination and the operating airlines. """
 
-                    ### The iata has been preset to CNX (Chiang Mai)!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-        conn.request("GET", "/airports/iata/cnx/stats/routes/daily", headers=headers)
+        conn.request("GET", "/airports/iata/" + self.local_airport_iata + "/stats/routes/daily", headers=headers)
 
         res = conn.getresponse()
         data = res.read()
@@ -30,9 +35,12 @@ class FlightInfo:
 
         self.destination_options = json.loads(api_result)
 
+        print("Possible destinations from  the city of " + self.local_airport +" are: \n")
+
         # Loop through the dictionary to provide the possible destinations. 
         for index, destination in enumerate(self.destination_options['routes'], 1):
             print(str(index) + '. ' + destination['destination']['name'])
+            time.sleep(0.2)
             self.possible_destination.append(destination['destination']['name'])
         
         self.chosen_destination = self.select_destination()
@@ -77,21 +85,64 @@ class FlightInfo:
             print(str(index) + '. ' + airline['name'])
 
 
-    def get_flight_dist_and_time(self):
+    def find_flight_dist_and_time(self):
         """Prints out to the user the distance and flight time to the destination airport."""
+        conn.request("GET", "/airports/iata/" + self.local_airport_iata + "/distance-time/" + self.destination_iata, headers=headers)
+        res = conn.getresponse()
+        data = res.read()       
+        api_result = data.decode("utf-8")
 
+        distance_time = json.loads(api_result)
+        distance = distance_time['greatCircleDistance']['mile']
+
+        time = distance_time['approxFlightTime']
+
+        print("\nThe distance from " + self.local_airport + " to " + self.chosen_destination + " is " + str(distance) 
+              + " miles, and time to destination is " + time)
+        
+    # def set_date_time(self):
+    #     """Returns the current date and time. This will be used to find the aircraft number."""
+    #     current_datetime = datetime.now()
+    #     added_time = current_datetime + timedelta(hours=12)
+    #     formatted_datetime_added = added_time.strftime("%Y-%m-%dT%H:%M")
+    #     formatted_datetime_curr = current_datetime.strftime("%Y-%m-%dT%H:%M")
+    #     self.fromlocal_dtime = formatted_datetime_curr
+    #     self.tolocal_dtime = formatted_datetime_added
+
+    # def get_aircraft_number(self):
+    #     conn.request("GET", "/flights/airports/iata/" + self.local_airport_iata + 
+    #                  "/" + self.fromlocal_dtime + "/" + self.tolocal_dtime + 
+    #                  "?withLeg=true&direction=Departure&withCancelled=true&withCodeshared=true&withCargo=true&withPrivate=true&withLocation=false", headers=headers)
+    #     res = conn.getresponse()
+    #     data = res.read()
+    #     api_result = data.decode("utf-8")
+    #     aircraft_data  = json.loads(api_result)
+
+    #     for index in aircraft_data['departures']:
+    #         print(index['arrival']['airport']['name'])
+    #         if index['arrival']['airport']['name'] == self.chosen_destination:
+    #             self.aircraft_number = index['number']
+    #             return self.aircraft_number
+            
+    #         return print("No route to your destination!")
 
 
 
 if __name__ == '__main__':
-    test1 = FlightInfo()
+    test1 = FlightInfo("CNX", "ICN")
     
     # Testing the find_destination method of the FlightInfo class. 
     test1.find_destination()
 
 
-    ##test1.provide_operators()
+    test1.provide_operators()
 
     #Testing get_destination_iata() method to see if the correct destination airport iata is found. 
     test1.get_destination_iata()
-    assert(test1.destination_iata == 'DMK')
+    #assert(test1.destination_iata == 'DMK')
+
+    test1.find_flight_dist_and_time()
+
+    # test1.set_date_time()
+
+    # test1.get_aircraft_number()
